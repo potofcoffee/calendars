@@ -11,5 +11,10 @@
     ],
     "require": {
         "thybag/php-sharepoint-lists-api": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Peregrinus\\Calendars\\": "src/"
+        }
     }
 }
