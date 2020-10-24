@@ -1,0 +1,15 @@
+{
+    "name": "peregrinus/calendars",
+    "description": "PHP interface to Sharepoint and Exchange calendars",
+    "type": "library",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Christoph Fischer",
+            "email": "chris@toph.de"
+        }
+    ],
+    "require": {
+        "thybag/php-sharepoint-lists-api": "dev-master"
+    }
+}
