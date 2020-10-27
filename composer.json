@@ -11,7 +11,8 @@
     ],
     "require": {
         "thybag/php-sharepoint-lists-api": "dev-master",
-        "carbondate/carbon": "^1.33"
+        "carbondate/carbon": "^1.33",
+        "php-ews/php-ews": "^1.0"
     },
     "autoload": {
         "psr-4": {
