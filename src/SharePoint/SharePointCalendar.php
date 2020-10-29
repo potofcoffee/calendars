@@ -105,18 +105,17 @@ class SharePointCalendar extends \Peregrinus\Calendars\AbstractCalendar
         $this->password = $password;
     }
 
-    protected function getBaseUrl()
-    {
-        $url = $this->getUrl();
-        if (false !== ($x = strpos($url, '/Lists'))) {
-            $url = substr($url, 0, $x);
-        }
-        return $url;
-    }
-
     protected function getWsdlUrl()
     {
-        return $this->getBaseUrl() . '/_vti_bin/Lists.asmx?WSDL';
+        return str_replace('/default.aspx',  '/_vti_bin/Lists.asmx?WSDL', $this->getUrl());
+    }
+
+    public function getCalendars() {
+        $calendars = [];
+        foreach($this->api->getLists() as $list) {
+            if ($list['servertemplate'] == 106) $calendars[] = $list['title'];
+        }
+        return $calendars;
     }
 
     protected function loadWsdl() {
@@ -154,17 +153,6 @@ class SharePointCalendar extends \Peregrinus\Calendars\AbstractCalendar
         $this->wsdlFile = $wsdlFile;
     }
 
-
-    public function getListName() {
-        if ($this->listName != '') return $this->listName;
-        $url = $this->getUrl();
-        if (false !== ($x = strpos($url, '/Lists/'))) {
-            $url = substr($url, $x+7);
-            $url = substr($url, 0, strpos($url.'/', '/'));
-        }
-        $this->listName = $url;
-        return $url;
-    }
 
     public function query() {
         return $this->api->query($this->getListName());
@@ -212,5 +200,23 @@ class SharePointCalendar extends \Peregrinus\Calendars\AbstractCalendar
         }
         return $columns;
     }
+
+    /**
+     * @return string
+     */
+    public function getListName(): string
+    {
+        return $this->listName;
+    }
+
+    /**
+     * @param string $listName
+     */
+    public function setListName(string $listName): void
+    {
+        $this->listName = $listName;
+    }
+
+
 
 }

@@ -16,7 +16,7 @@ class SharePointCalendarTest extends TestCase
     {
         parent::setUp();
         $break = false;
-        foreach (['TEST_SP_URL', 'TEST_SP_USER', 'TEST_SP_PASSWORD'] as $key) {
+        foreach (['TEST_SP_URL', 'TEST_SP_USER', 'TEST_SP_PASSWORD', 'TEST_SP_LIST'] as $key) {
             if (getenv($key) == '') {
                 echo 'Environment variable ' . $key . ' must be set for these tests to work.' . PHP_EOL;
             }
@@ -26,20 +26,6 @@ class SharePointCalendarTest extends TestCase
         }
     }
 
-
-    public function testShowTestInfo() {
-        $break = false;
-        foreach (['TEST_SP_URL', 'TEST_SP_USER', 'TEST_SP_PASSWORD'] as $key) {
-            if (getenv($key) == '') {
-                echo 'Environment variable '.$key.' must be set for these tests to work.'.PHP_EOL;
-            }
-        }
-        foreach (['TEST_SP_URL', 'TEST_SP_USER', 'TEST_SP_PASSWORD'] as $key) {
-            $this->assertNotEmpty(getenv($key));
-        }
-        if ($break) die();
-    }
-
     public function testCreateObject()
     {
         $sp = $this->getCachedCalendarObject();
@@ -47,6 +33,15 @@ class SharePointCalendarTest extends TestCase
         $this->assertInstanceOf(SharePointCalendar::class, $sp);
 
     }
+
+    public function testGetLists()
+    {
+        $sp = $this->getCachedCalendarObject();
+        $lists = $sp->getCalendars();
+        echo print_r($lists, 1).PHP_EOL;
+        $this->assertIsArray($lists);
+    }
+
 
     public function testWsdlPreloading() {
         $sp = $this->getCachedCalendarObject();
@@ -108,7 +103,9 @@ class SharePointCalendarTest extends TestCase
 
     protected function createObject() {
         // try creating SharePointCalendarObject
-        return new SharePointCalendar(getenv('TEST_SP_URL'), getenv('TEST_SP_USER'), getenv('TEST_SP_PASSWORD'));
+        $calendar = new SharePointCalendar(getenv('TEST_SP_URL'), getenv('TEST_SP_USER'), getenv('TEST_SP_PASSWORD'));
+        $calendar->setListName(getenv('TEST_SP_LIST'));
+        return $calendar;
     }
 
     protected function getCachedCalendarObject() {
