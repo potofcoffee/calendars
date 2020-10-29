@@ -33,7 +33,7 @@ class AbstractCalendarItem
 
     public function __construct(array $data = [], $calendar = null)
     {
-        if (null !== $this->calendar) $this->setCalendar($calendar);
+        if (null !== $calendar) $this->setCalendar($calendar);
         $this->setPropertiesFromArray($data);
     }
 

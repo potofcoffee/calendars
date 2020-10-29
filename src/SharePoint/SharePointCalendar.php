@@ -129,7 +129,6 @@ class SharePointCalendar extends \Peregrinus\Calendars\AbstractCalendar
         curl_setopt($ch, CURLOPT_CAINFO, "./cacert.pem");
         $return = curl_exec($ch);
         $info = curl_getinfo($ch);
-        if ($info['http_code'] != 200) echo print_r($info,1 ).PHP_EOL;
         curl_close($ch);
 
 
@@ -176,7 +175,7 @@ class SharePointCalendar extends \Peregrinus\Calendars\AbstractCalendar
         if (isset($results[0])) {
             $events = [];
             foreach ($results as $result) {
-                $events[] = new SharePointCalendarItem($result, $this);
+                $events[] = SharePointCalendarItem::fromSharepointListItem($result, $this);
             }
             return $events;
         } else return null;
@@ -184,18 +183,18 @@ class SharePointCalendar extends \Peregrinus\Calendars\AbstractCalendar
 
     public function find($id) {
         $result = $this->query()->where('ID', '=', $id)->get();
-        return isset($result[0]) ? new SharePointCalendarItem($result[0], $this) : null;
+        return isset($result[0]) ? SharePointCalendarItem::fromSharepointListItem($result[0], $this) : null;
     }
 
     public function create($data) {
         $event = new SharePointCalendarItem($data);
         $result = $this->api->write($this->getListName(), $event->toArray());
-        return isset($result[0]) ? new SharePointCalendarItem($result[0], $this) : null;
+        return isset($result[0]) ? SharePointCalendarItem::fromSharepointListItem($result[0], $this) : null;
     }
 
     public function update(SharePointCalendarItem $event) {
         $result = $this->api->update($this->getListName(), $event->getID(), $event->toArray());
-        return isset($result[0]) ? new SharePointCalendarItem($result[0], $this) : null;
+        return isset($result[0]) ? SharePointCalendarItem::fromSharepointListItem($result[0], $this) : null;
     }
 
     public function delete(SharePointCalendarItem $event) {

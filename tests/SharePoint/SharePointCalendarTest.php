@@ -12,6 +12,21 @@ class SharePointCalendarTest extends TestCase
     /** @var SharePointCalendar  */
     protected $calendar = null;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $break = false;
+        foreach (['TEST_SP_URL', 'TEST_SP_USER', 'TEST_SP_PASSWORD'] as $key) {
+            if (getenv($key) == '') {
+                echo 'Environment variable ' . $key . ' must be set for these tests to work.' . PHP_EOL;
+            }
+        }
+        if ($break) {
+            die();
+        }
+    }
+
+
     public function testShowTestInfo() {
         $break = false;
         foreach (['TEST_SP_URL', 'TEST_SP_USER', 'TEST_SP_PASSWORD'] as $key) {
@@ -49,7 +64,6 @@ class SharePointCalendarTest extends TestCase
 
     public function testGetListName() {
         $sp = $this->getCachedCalendarObject();
-        echo $sp->getListName().PHP_EOL;
         $this->assertNotEmpty($sp->getListName());
     }
 
@@ -62,7 +76,7 @@ class SharePointCalendarTest extends TestCase
 
     public function testCreateItem() {
         $sp = $this->getCachedCalendarObject();
-        $event1 = $sp->create(['eventdate' => '2020-10-02 09:01:02', 'enddate' => '2020-10-02 10:15:18', 'title' => 'SP TEST', 'location' => 'TEST LOCATION']);
+        $event1 = $sp->create(['startDate' => '2020-10-02 09:01:02', 'endDate' => '2020-10-02 10:15:18', 'title' => 'SP TEST', 'location' => 'TEST LOCATION']);
         $this->assertNotNull($event1);
 
         $event2 = $sp->find($event1->getID());
@@ -76,7 +90,7 @@ class SharePointCalendarTest extends TestCase
 
     public function testUpdateItem() {
         $sp = $this->getCachedCalendarObject();
-        $event1 = $sp->create(['eventdate' => '2020-10-02 09:01:02', 'enddate' => '2020-10-02 10:15:18', 'title' => 'SP TEST', 'location' => 'TEST LOCATION']);
+        $event1 = $sp->create(['startDate' => '2020-10-02 09:01:02', 'endDate' => '2020-10-02 10:15:18', 'title' => 'SP UPD TEST', 'location' => 'TEST LOCATION']);
         $this->assertNotNull($event1);
 
         $event2 = $event1->update(['title' => 'SP TEST 1']);
